@@ -1,4 +1,4 @@
-package br.com.thiagoGomes.springbootionicbackend;
+package br.com.thiagoGomes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
