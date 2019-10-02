@@ -1,6 +1,7 @@
 package br.com.thiagoGomes.domain;
 
 import br.com.thiagoGomes.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ public class Cliente implements Serializable {
     private String email;
     private String cpfOuCnpj;
     private Integer tipo;
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection //Cria uma tabela de entidade fraca
@@ -67,8 +69,8 @@ public class Cliente implements Serializable {
         this.cpfOuCnpj = cpfOuCnpj;
     }
 
-    public TipoCliente getTipo() {
-        return TipoCliente.toEnum(tipo);
+    public String getTipo() {
+        return TipoCliente.toEnum(tipo).getDescricao();
     }
 
     public void setTipo(TipoCliente tipo) {
