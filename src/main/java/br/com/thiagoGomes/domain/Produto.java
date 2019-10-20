@@ -1,15 +1,23 @@
 package br.com.thiagoGomes.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Produto implements Serializable {
@@ -22,7 +30,7 @@ public class Produto implements Serializable {
     private String nome;
     private Double preco;
 
-    @JsonBackReference
+    @JsonIgnore //Evita o erro de concorrencia ciclica, erro "Expected ',' instead of 't'"
     @ManyToMany
     @JoinTable(name = "PRODUTO_CATEGORIA",
             joinColumns = @JoinColumn(name = "produto_id"),
@@ -30,7 +38,7 @@ public class Produto implements Serializable {
     )
     private List<Categoria> categorias = new ArrayList<>();
     
-    @JsonIgnore
+    @JsonIgnore //Evita o erro de concorrencia ciclica, erro "Expected ',' instead of 't'"
     @OneToMany(mappedBy = "id.produto") //Tem que ser o "." pq o Id do Item produto acessa o ItemPedidoPk
     private Set<ItemPedido> itens = new HashSet<>();
 
@@ -42,7 +50,7 @@ public class Produto implements Serializable {
         this.preco = preco;
     }
     
-    @JsonIgnore
+    @JsonIgnore //Evita o erro de concorrencia ciclica, erro "Expected ',' instead of 't'"
     public List<Pedido> getPedidos(){
     	List<Pedido> lista = new ArrayList<>();
     	itens.forEach(x -> lista.add(x.getPedido()));

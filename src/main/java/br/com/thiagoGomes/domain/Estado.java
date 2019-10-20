@@ -1,12 +1,17 @@
 package br.com.thiagoGomes.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Estado implements Serializable {
@@ -18,7 +23,7 @@ public class Estado implements Serializable {
     private Integer id;
     private String nome;
 
-    @JsonBackReference
+    @JsonIgnore //Evita o erro de concorrencia ciclica, erro "Expected ',' instead of 't'"
     @OneToMany(mappedBy = "estado")
     private List<Cidade> cidades = new ArrayList<>();
 
