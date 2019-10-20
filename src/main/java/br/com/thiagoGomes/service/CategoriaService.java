@@ -1,12 +1,13 @@
 package br.com.thiagoGomes.service;
 
-import br.com.thiagoGomes.domain.Categoria;
-import br.com.thiagoGomes.repositories.CategoriaRepository;
-import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import br.com.thiagoGomes.domain.Categoria;
+import br.com.thiagoGomes.repositories.CategoriaRepository;
+import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {

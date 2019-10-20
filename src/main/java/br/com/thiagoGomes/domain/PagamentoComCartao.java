@@ -1,9 +1,10 @@
 package br.com.thiagoGomes.domain;
 
-import br.com.thiagoGomes.domain.enums.EstadoPagamento;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
+
+import br.com.thiagoGomes.domain.enums.EstadoPagamento;
 
 @Entity
 public class PagamentoComCartao extends Pagamento implements Serializable {

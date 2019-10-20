@@ -1,13 +1,13 @@
 package br.com.thiagoGomes.domain;
 
-import br.com.thiagoGomes.domain.enums.EstadoPagamento;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
-import java.util.Date;
+import br.com.thiagoGomes.domain.enums.EstadoPagamento;
 
 @Entity
 public class PagamentoComBoleto extends Pagamento implements Serializable {
