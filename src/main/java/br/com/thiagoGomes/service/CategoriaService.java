@@ -1,5 +1,6 @@
 package br.com.thiagoGomes.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,10 @@ public class CategoriaService {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos."); 
 			//Esse erro será tratado na classe ResourceExceptionHandler
 		}
+	}
+
+	public List<Categoria> findAll() {
+		return repository.findAll();
 	}
 
 }

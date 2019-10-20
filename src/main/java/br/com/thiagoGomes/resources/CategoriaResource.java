@@ -1,6 +1,9 @@
 package br.com.thiagoGomes.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.thiagoGomes.domain.Categoria;
+import br.com.thiagoGomes.dto.CategoriaDTO;
 import br.com.thiagoGomes.service.CategoriaService;
 
 @RestController
@@ -48,6 +52,14 @@ public class CategoriaResource {
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<Categoria> listaCategorias = service.findAll();
+		List<CategoriaDTO> listaDto = listaCategorias.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		
+		return ResponseEntity.ok().body(listaDto);
 	}
 	
 	
