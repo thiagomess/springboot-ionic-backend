@@ -3,6 +3,8 @@ package br.com.thiagoGomes.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.thiagoGomes.domain.Categoria;
+import br.com.thiagoGomes.dto.CategoriaDTO;
 import br.com.thiagoGomes.repositories.CategoriaRepository;
 import br.com.thiagoGomes.service.exceptions.DataIntegrityException;
 import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
@@ -27,7 +30,7 @@ public class CategoriaService {
 				"Objeto Não encontrado: Id: " + id + " ,tipo: " + Categoria.class.getName()));
 	}
 
-	public Categoria insert(Categoria obj) {
+	public Categoria insert(@Valid Categoria obj) {
 		obj.setId(null);
 		return repository.save(obj);
 	}
@@ -57,6 +60,10 @@ public class CategoriaService {
 		//que sao ?page=1&size=9&sort=nome,asc e mataria essa linha PageRequest
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repository.findAll(pageRequest);
+	}
+	
+	public Categoria fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
 	}
 
 }
