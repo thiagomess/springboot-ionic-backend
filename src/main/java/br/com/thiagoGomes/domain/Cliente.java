@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class Cliente implements Serializable {
     private String email;
     private String cpfOuCnpj;
     private Integer tipo;
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //Em caso de deleção, é deletado o endereços tambem
     private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection //Cria uma tabela de entidade fraca
     @CollectionTable(name ="TELEFONE")
