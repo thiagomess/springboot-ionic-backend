@@ -1,16 +1,37 @@
 package br.com.thiagoGomes;
 
-import br.com.thiagoGomes.domain.*;
-import br.com.thiagoGomes.domain.enums.EstadoPagamento;
-import br.com.thiagoGomes.domain.enums.TipoCliente;
-import br.com.thiagoGomes.repositories.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import br.com.thiagoGomes.domain.Categoria;
+import br.com.thiagoGomes.domain.Cidade;
+import br.com.thiagoGomes.domain.Cliente;
+import br.com.thiagoGomes.domain.Endereco;
+import br.com.thiagoGomes.domain.Estado;
+import br.com.thiagoGomes.domain.ItemPedido;
+import br.com.thiagoGomes.domain.Pagamento;
+import br.com.thiagoGomes.domain.PagamentoComBoleto;
+import br.com.thiagoGomes.domain.PagamentoComCartao;
+import br.com.thiagoGomes.domain.Pedido;
+import br.com.thiagoGomes.domain.Produto;
+import br.com.thiagoGomes.domain.enums.EstadoPagamento;
+import br.com.thiagoGomes.domain.enums.TipoCliente;
+import br.com.thiagoGomes.repositories.CategoriaRepository;
+import br.com.thiagoGomes.repositories.CidadeRepository;
+import br.com.thiagoGomes.repositories.ClienteRepository;
+import br.com.thiagoGomes.repositories.EnderecoRepository;
+import br.com.thiagoGomes.repositories.EstadoRepository;
+import br.com.thiagoGomes.repositories.ItemPedidoRepository;
+import br.com.thiagoGomes.repositories.PagamentoRepository;
+import br.com.thiagoGomes.repositories.PedidoRepository;
+import br.com.thiagoGomes.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class SpringbootIonicBackendApplication implements CommandLineRunner {
@@ -115,13 +136,16 @@ public class SpringbootIonicBackendApplication implements CommandLineRunner {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-        Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
-        Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+//        Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+        Pedido ped1 = new Pedido(null,LocalDateTime.of(2017, 9, 30, 10, 32), cli1, e1);
+//        Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+        Pedido ped2 = new Pedido(null, LocalDateTime.of(2018, 10, 10, 19, 35), cli1, e2);
 
         Pagamento pag1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
         ped1.setPagamento(pag1);
 
-        Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+//        Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+        Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, LocalDate.of(2018, 10, 20), null);
         ped2.setPagamento(pag2);
 
         cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));

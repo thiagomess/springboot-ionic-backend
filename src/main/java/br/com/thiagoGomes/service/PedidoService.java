@@ -1,24 +1,71 @@
 package br.com.thiagoGomes.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.thiagoGomes.domain.ItemPedido;
+import br.com.thiagoGomes.domain.PagamentoComBoleto;
 import br.com.thiagoGomes.domain.Pedido;
+import br.com.thiagoGomes.domain.enums.EstadoPagamento;
+import br.com.thiagoGomes.repositories.ItemPedidoRepository;
+import br.com.thiagoGomes.repositories.PagamentoRepository;
 import br.com.thiagoGomes.repositories.PedidoRepository;
 import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
 
 @Service
 public class PedidoService {
 
-    @Autowired
-    private PedidoRepository repository;
+	@Autowired
+	private PedidoRepository repository;
 
-    public Pedido find(Integer id) {
-        final Optional<Pedido> pedido = repository.findById(id);
-        return pedido.orElseThrow(() -> new ObjectNotFoundException(
-                "Objeto Não encontrado: Id: " + id + " ,tipo: " + Pedido.class.getName()));
-    }
+	@Autowired
+	private BoletoService boletoService;
+
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private ProdutoService produtoService;
+
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
+
+	public Pedido find(Integer id) {
+		final Optional<Pedido> pedido = repository.findById(id);
+		return pedido.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto Não encontrado: Id: " + id + " ,tipo: " + Pedido.class.getName()));
+	}
+
+	@Transactional
+	public Pedido insert(@Valid Pedido obj) {
+		obj.setId(null);
+		obj.setInstante(LocalDateTime.now());
+		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
+		obj.getPagamento().setPedido(obj);
+		if (obj.getPagamento() instanceof PagamentoComBoleto) {
+			PagamentoComBoleto pagto = (PagamentoComBoleto) obj.getPagamento();
+			boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
+		}
+		obj = repository.save(obj);
+
+		pagamentoRepository.save(obj.getPagamento());
+
+		for (ItemPedido ip : obj.getItens()) {
+			ip.setDesconto(0.0);
+			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());
+			ip.setPedido(obj);
+		}
+
+		itemPedidoRepository.saveAll(obj.getItens());
+
+		return obj;
+
+	}
 
 }
