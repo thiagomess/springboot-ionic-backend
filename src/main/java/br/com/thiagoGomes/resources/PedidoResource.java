@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.thiagoGomes.domain.Pedido;
+import br.com.thiagoGomes.dto.PedidoDTO;
 import br.com.thiagoGomes.service.PedidoService;
 
 @RestController
@@ -26,9 +27,10 @@ public class PedidoResource {
 
     @GetMapping
     @RequestMapping("/{id}")
-    public ResponseEntity<Pedido> find(@PathVariable Integer id) {
+    public ResponseEntity<PedidoDTO> find(@PathVariable Integer id) {
         final Pedido pedido = service.find(id);
-        return ResponseEntity.ok().body(pedido);
+        PedidoDTO pedidoDTO = new PedidoDTO(pedido);
+        return ResponseEntity.ok().body(pedidoDTO);
     }
     
 	@PostMapping
