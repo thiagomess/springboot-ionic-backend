@@ -128,7 +128,7 @@ public class Pedido implements Serializable {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		StringBuilder builder = new StringBuilder();
-		builder.append("Pedido número");
+		builder.append("Pedido número: ");
 		builder.append(getId());
 		builder.append(", Instante: ");
 		builder.append(getInstante().format(formatter));
