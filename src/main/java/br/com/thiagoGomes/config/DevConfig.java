@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.thiagoGomes.service.DBService;
+import br.com.thiagoGomes.service.EmailService;
+import br.com.thiagoGomes.service.SmtpEmailService;
 
 //COnfiguração do banco de dados de Test, que esta setado no application-teste.properties
 @Configuration
@@ -27,5 +29,11 @@ public class DevConfig {
 			dbService.instantiateTestDatabase();
 		}
 		return true;
+	}
+	
+	//Desse modo, quando injetar o email Service, usando o profile dev, irá criar a instancia do SmtpEmailService
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 }
