@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.thiagoGomes.dto.CredenciaisDTO;
 
-
-
 /**
  * Classe que realiza a autenticao no endpoint /login e devolve o TOKEN
  *

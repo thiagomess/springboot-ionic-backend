@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import br.com.thiagoGomes.security.JWTAuthenticationFilter;
+import br.com.thiagoGomes.security.JWTAuthorizationFilter;
 import br.com.thiagoGomes.security.JWTUtil;
 
 @Configuration
@@ -60,7 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() //Permite apenas os metodos GET do Array
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.anyRequest().authenticated();
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); //Adiciona o filter para gerar o token
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); //Adiciona o filter para autenticar egerar o token
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); //Adiciona o filter para validar o token e autorizar
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// Pra assegurar que nao ira
 																						// criar sessao
 
