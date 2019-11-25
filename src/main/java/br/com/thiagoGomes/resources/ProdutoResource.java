@@ -30,7 +30,6 @@ public class ProdutoResource {
         return ResponseEntity.ok().body(produto);
     }
     
-    
     //URL: http://localhost:8080/produtos?nome=or&categorias=1,4
 	@GetMapping
 	public ResponseEntity<Page<ProdutoDTO>> findPage(

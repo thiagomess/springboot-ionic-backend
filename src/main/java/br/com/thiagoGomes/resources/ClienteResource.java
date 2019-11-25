@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,12 +56,14 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> listaClientes = service.findAll();
@@ -70,6 +73,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listaDto);
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	//http://localhost:8080/clientes/page?linesPerPage=2&page=3&direction=DESC&orderBy=id
 	//Caso nao escolhido os atributos no param, será setado os valores default
 	@GetMapping(value = "/page")
