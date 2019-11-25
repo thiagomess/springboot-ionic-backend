@@ -12,6 +12,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import br.com.thiagoGomes.domain.enums.EstadoPagamento;
@@ -19,6 +20,9 @@ import br.com.thiagoGomes.domain.enums.EstadoPagamento;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)  // Gera uma tabela pra cada classe que herda desta classe.
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property  = "@type") // Mapeia qual classe ira instanciar, de acordo com o nome vindo do JSON
+@JsonSubTypes({
+	@JsonSubTypes.Type(value=PagamentoComBoleto.class, name="pagamentoComBoleto"),
+	@JsonSubTypes.Type(value=PagamentoComCartao.class, name="pagamentoComCartao")})
 public abstract class Pagamento implements Serializable {
 
     private static final long serialVersionUID = 1400970556031056608L;

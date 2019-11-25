@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Order Confirmation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.negrito{
+	font-weight: bold;
+}
+.letraNormal{
+	font-weight: normal;
+}
+.letraVermelha{
+	color:red;
+}
+</style>
+</head>
+<body>
+	<div>
+		<h1>
+			Pedido número: <span th:text="${pedido.id}"> </span>
+		</h1>
+		<p class="negrito">
+			Instante: <span class="letraNormal"
+				th:text="${#temporals.format(pedido.instante, 'dd/MM/yyyy HH:mm')}"></span>
+		</p>
+		<p class="negrito">
+			Cliente: <span class="letraNormal" th:text="${pedido.cliente.nome}"></span>
+		</p>
+		<p class="negrito">
+			Situação do pagamento: <span class="letraNormal letraVermelha"
+				th:text="${pedido.pagamento.estado.descricao}"></span>
+		</p>
+		<h3>Detalhes do pedido:</h3>
+		<table border="1">
+			<tr>
+				<th>Produto</th>
+				<th>Quantidade</th>
+				<th>Preço unitário</th>
+				<th>Subtotal</th>
+			</tr>
+			<tr th:each="item : ${pedido.itens}">
+				<td th:text="${item.produto.nome}">nome</td>
+				<td th:text="${item.quantidade}">quantidade</td>
+				<td
+					th:text="${'R$ ' + #numbers.formatDecimal(item.preco, 0, 'POINT', 2,'COMMA')}">preco</td>
+				<td
+					th:text="${'R$ ' + #numbers.formatDecimal(item.subTotal, 0, 'POINT', 2,'COMMA')}">subTotal</td>
+			</tr>
+		</table>
+		<p class="negrito">
+			Valor total: <span class="letraNormal"
+				th:text="${'R$ ' + #numbers.formatDecimal(pedido.valorTotal, 0,'POINT', 2, 'COMMA')}"></span>
+		</p>
+	</div>
+</body>
+</html>

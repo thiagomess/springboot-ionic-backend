@@ -35,10 +35,10 @@ public class PedidoService {
 
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -64,7 +64,7 @@ public class PedidoService {
 		pagamentoRepository.save(obj.getPagamento());
 
 		for (ItemPedido ip : obj.getItens()) {
-			
+
 			ip.setDesconto(0.0);
 			ip.setProduto(produtoService.find(ip.getProduto().getId()));
 			ip.setPreco(ip.getProduto().getPreco());
@@ -72,7 +72,7 @@ public class PedidoService {
 		}
 
 		itemPedidoRepository.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationEMail(obj);
+		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 
 	}
