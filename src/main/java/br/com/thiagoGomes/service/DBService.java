@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.thiagoGomes.domain.Categoria;
@@ -60,6 +61,9 @@ public class DBService {
     
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
+    
+	@Autowired
+	private BCryptPasswordEncoder bCryptPassEncoder;
 
 	
 	public void instantiateTestDatabase() {
@@ -120,7 +124,7 @@ public class DBService {
 	        estadoRepository.saveAll(Arrays.asList(est1, est2));
 	        cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-	        Cliente cli1 = new Cliente(null, "Maria Silva", "thiagogomes19@hotmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+	        Cliente cli1 = new Cliente(null, "Maria Silva", "thiagogomes19@hotmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPassEncoder.encode("123"));
 	        cli1.getTelefones().addAll(Arrays.asList("27633332", "93483921"));
 
 	        Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apt 303", "Jardim", "38228834", cli1, c1);
