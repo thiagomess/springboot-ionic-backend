@@ -21,6 +21,7 @@ import br.com.thiagoGomes.domain.PagamentoComCartao;
 import br.com.thiagoGomes.domain.Pedido;
 import br.com.thiagoGomes.domain.Produto;
 import br.com.thiagoGomes.domain.enums.EstadoPagamento;
+import br.com.thiagoGomes.domain.enums.Perfil;
 import br.com.thiagoGomes.domain.enums.TipoCliente;
 import br.com.thiagoGomes.repositories.CategoriaRepository;
 import br.com.thiagoGomes.repositories.CidadeRepository;
@@ -126,13 +127,22 @@ public class DBService {
 
 	        Cliente cli1 = new Cliente(null, "Maria Silva", "thiagogomes19@hotmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPassEncoder.encode("123"));
 	        cli1.getTelefones().addAll(Arrays.asList("27633332", "93483921"));
+	        
+	        Cliente cli2 = new Cliente(null, "Perfil Admin", "thiagogomes19@gmail.com", "06783958027", TipoCliente.PESSOAFISICA, bCryptPassEncoder.encode("123"));
+	        cli2.addPerfil(Perfil.ADMIN);
+	        cli2.getTelefones().addAll(Arrays.asList("91281981", "12939993"));
 
 	        Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apt 303", "Jardim", "38228834", cli1, c1);
 	        Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+	        Endereco e3 = new Endereco(null, "Avenida das Flores", "609", null, "Centro", "05872122", cli2, c2);
 
 	        cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+	        cli1.getEnderecos().addAll(Arrays.asList(e3));
+	        
+	        clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+	        enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
-	        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//	        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 //	        Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
 	        Pedido ped1 = new Pedido(null,LocalDateTime.of(2017, 9, 30, 10, 32), cli1, e1);
@@ -147,9 +157,6 @@ public class DBService {
 	        ped2.setPagamento(pag2);
 
 	        cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
-
-	        clienteRepository.saveAll(Arrays.asList(cli1));
-	        enderecoRepository.saveAll(Arrays.asList(e1, e2));
 
 	        pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 	        pagamentoRepository.saveAll(Arrays.asList(pag1, pag2));
