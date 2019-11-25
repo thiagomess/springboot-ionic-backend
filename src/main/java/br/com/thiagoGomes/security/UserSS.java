@@ -76,4 +76,9 @@ public class UserSS implements UserDetails {
 		return true;
 	}
 
+	//Verifica se a role passada cointains na lista
+	public boolean hasRole(Perfil perfil) {
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
+
 }

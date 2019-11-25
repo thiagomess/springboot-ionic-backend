@@ -17,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.thiagoGomes.domain.Cidade;
 import br.com.thiagoGomes.domain.Cliente;
 import br.com.thiagoGomes.domain.Endereco;
+import br.com.thiagoGomes.domain.enums.Perfil;
 import br.com.thiagoGomes.domain.enums.TipoCliente;
 import br.com.thiagoGomes.dto.ClienteDTO;
 import br.com.thiagoGomes.dto.ClienteNewDTO;
 import br.com.thiagoGomes.repositories.ClienteRepository;
 import br.com.thiagoGomes.repositories.EnderecoRepository;
+import br.com.thiagoGomes.security.UserSS;
+import br.com.thiagoGomes.service.exceptions.AuthorizationException;
 import br.com.thiagoGomes.service.exceptions.DataIntegrityException;
 import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
 
@@ -30,17 +33,24 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repository;
-	
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPassEncoder;
 
 	public Cliente find(Integer id) {
-		final Optional<Cliente> cliente = repository.findById(id);
-		return cliente.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto Não encontrado: Id: " + id + " ,tipo: " + Cliente.class.getName()));
+
+		//Pega o usuario logado, verifica se o usuario que esta consultando, é o usuario logado ou tem perfil ADMIN
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		} 
+		
+		Optional<Cliente> obj = repository.findById(id);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
 	@Transactional
@@ -48,8 +58,8 @@ public class ClienteService {
 		obj.setId(null);
 		obj = repository.save(obj);
 		enderecoRepository.saveAll(obj.getEnderecos());
-		
-		return obj ;
+
+		return obj;
 	}
 
 	public Cliente update(Cliente obj) {
