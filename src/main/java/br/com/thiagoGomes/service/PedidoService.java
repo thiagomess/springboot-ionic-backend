@@ -7,8 +7,13 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.thiagoGomes.domain.Categoria;
+import br.com.thiagoGomes.domain.Cliente;
 import br.com.thiagoGomes.domain.ItemPedido;
 import br.com.thiagoGomes.domain.PagamentoComBoleto;
 import br.com.thiagoGomes.domain.Pedido;
@@ -16,6 +21,8 @@ import br.com.thiagoGomes.domain.enums.EstadoPagamento;
 import br.com.thiagoGomes.repositories.ItemPedidoRepository;
 import br.com.thiagoGomes.repositories.PagamentoRepository;
 import br.com.thiagoGomes.repositories.PedidoRepository;
+import br.com.thiagoGomes.security.UserSS;
+import br.com.thiagoGomes.service.exceptions.AuthorizationException;
 import br.com.thiagoGomes.service.exceptions.ObjectNotFoundException;
 
 @Service
@@ -75,6 +82,17 @@ public class PedidoService {
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 
+	}
+	
+	//Busca  paginada retornando os pedidos do cliente logado
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente =  clienteService.find(user.getId());
+		return repository.findByCliente(cliente, pageRequest);
 	}
 
 }
