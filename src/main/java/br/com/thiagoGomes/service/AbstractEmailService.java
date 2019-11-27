@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import br.com.thiagoGomes.domain.Cliente;
 import br.com.thiagoGomes.domain.Pedido;
 
 //Utilizando o padrão Template Method, onde as classes reais irao extende-la, onde essa classe já realizou 
@@ -79,5 +80,22 @@ public abstract class AbstractEmailService implements EmailService {
 		context.setVariable("pedido", obj); // Pega o objeto da um apelido que sera usado na referencia no hmtl.
 		return templateEngine.process("email/confirmacaoPedido", context); //processa o template e retorna em forma de string
 	}
+	
+	@Override
+	public void sendNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage msg = prepareNewPasswordEmail(cliente, newPass);
+		sendEmail(msg);
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(cliente.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Você solicitou uma nova senha");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("A sua nova senha é: " + newPass);
+		return sm;
+	}
+	
 
 }
