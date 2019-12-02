@@ -10,11 +10,11 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.thiagoGomes.service.exceptions.FileException;
-
 
 /**
  * Classe responsavel por manipular a imagem para transforma-la em JPG.
@@ -48,7 +48,7 @@ public class ImageService {
 		return jpgImage;
 	}
 
-	//Devolve a imagem em formato inpuStream
+	// Devolve a imagem em formato inpuStream
 	public InputStream getInputStream(BufferedImage img, String extension) {
 		try {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -57,6 +57,21 @@ public class ImageService {
 		} catch (IOException e) {
 			throw new FileException("Erro ao ler arquivo");
 		}
+	}
+
+	//Metodo que corta a imagem para ficar quadrada
+	public BufferedImage cropSquare(BufferedImage sourceImg) {
+		int min = (sourceImg.getHeight() <= sourceImg.getWidth()) ? sourceImg.getHeight() : sourceImg.getWidth();
+		return Scalr.crop(
+				sourceImg, 
+				(sourceImg.getWidth() / 2) - (min / 2), 
+				(sourceImg.getHeight() / 2) - (min / 2),
+				min, min);
+	}
+
+	//metodo para redimessionar a imagem para o tamanho passado
+	public BufferedImage resize(BufferedImage sourceImg, int size) {
+		return Scalr.resize(sourceImg, Scalr.Method.ULTRA_QUALITY, size);
 	}
 
 }
