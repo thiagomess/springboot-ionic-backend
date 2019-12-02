@@ -41,18 +41,19 @@ public class ClienteService {
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPassEncoder;
-	
+
 	@Autowired
 	private S3Service s3Service;
 
 	public Cliente find(Integer id) {
 
-		//Pega o usuario logado, verifica se o usuario que esta consultando, é o usuario logado ou tem perfil ADMIN
+		// Pega o usuario logado, verifica se o usuario que esta consultando, é o
+		// usuario logado ou tem perfil ADMIN
 		UserSS user = UserService.authenticated();
 		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
-		} 
-		
+		}
+
 		Optional<Cliente> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
@@ -124,10 +125,19 @@ public class ClienteService {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 	}
-	
+
+	@Transactional
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		URI uri = s3Service.uploadFile(multipartFile);
+		Cliente cli = find(user.getId());
+		cli.setImagemUrl(uri.toString());
+		repository.save(cli);
+		return uri;
+
 	}
-	
 
 }
