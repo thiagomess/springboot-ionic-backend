@@ -33,21 +33,20 @@ public class S3Service {
 		try {
 			String fileName = multipartFile.getOriginalFilename(); //pega o nome do arquivo
 			InputStream is = multipartFile.getInputStream(); //processamento do arquivo
+//			long contentLength = multipartFile.getSize(); //tamanho do arquivo
 			String contentType = multipartFile.getContentType(); //tipo do arquivo
-			long contentLength = multipartFile.getSize(); //tamanho do arquivo
 
-			return uploadFile(is, fileName, contentType, contentLength);
+			return uploadFile(is, fileName, contentType);
 		} catch (IOException e) {
 			throw new FileException("Erro de IO " + e.getMessage());
 		}
 
 	}
 
-	public URI uploadFile(InputStream is, String fileName, String contentType, long contentLength) {
+	public URI uploadFile(InputStream is, String fileName, String contentType) {
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
-			meta.setContentLength(contentLength);
 
 			LOG.info("Iniciando upload");
 
