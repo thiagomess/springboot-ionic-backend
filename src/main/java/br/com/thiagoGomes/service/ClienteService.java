@@ -98,6 +98,23 @@ public class ClienteService {
 	public List<Cliente> findAll() {
 		return repository.findAll();
 	}
+	
+	public Cliente findByEmail(String email) {
+
+		// Pega o usuario logado, verifica se o usuario que esta consultando, é o
+		// usuario logado ou tem perfil ADMIN
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
+		Cliente cliente = repository.findByEmail(email);
+		if (cliente == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! email: " + email + ", Tipo: " + Cliente.class.getName());
+		}
+		return cliente;
+	}
 
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		// https://github.com/thiagomess/Springboot-forum-API_REST/commit/3af0426a36f61e6f4575884aa1ef20052c26c6ef
