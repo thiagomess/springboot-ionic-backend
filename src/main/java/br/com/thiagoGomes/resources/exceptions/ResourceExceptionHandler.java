@@ -1,8 +1,5 @@
 package br.com.thiagoGomes.resources.exceptions;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;

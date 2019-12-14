@@ -1,9 +1,6 @@
 package br.com.thiagoGomes.resources.exceptions;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class StandardError implements Serializable {
 
