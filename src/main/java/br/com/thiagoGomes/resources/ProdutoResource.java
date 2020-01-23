@@ -15,6 +15,7 @@ import br.com.thiagoGomes.domain.Produto;
 import br.com.thiagoGomes.dto.ProdutoDTO;
 import br.com.thiagoGomes.resources.utils.URL;
 import br.com.thiagoGomes.service.ProdutoService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/produtos")
@@ -23,6 +24,7 @@ public class ProdutoResource {
     @Autowired
     private ProdutoService service;
 
+    @ApiOperation(value="Busca produto por id", response = Produto.class)
     @GetMapping
     @RequestMapping("/{id}")
     public ResponseEntity<Produto> find(@PathVariable Integer id) {
@@ -30,6 +32,7 @@ public class ProdutoResource {
         return ResponseEntity.ok().body(produto);
     }
     
+    @ApiOperation(value="Busca paginada de produto", response = ProdutoDTO.class)
     //URL: http://localhost:8080/produtos?nome=or&categorias=1,4
 	@GetMapping
 	public ResponseEntity<Page<ProdutoDTO>> findPage(

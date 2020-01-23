@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.thiagoGomes.domain.Pedido;
 import br.com.thiagoGomes.dto.PedidoDTO;
 import br.com.thiagoGomes.service.PedidoService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/pedidos")
@@ -27,6 +28,7 @@ public class PedidoResource {
     @Autowired
     private PedidoService service;
 
+    @ApiOperation(value="Busca pedido por id", response = PedidoDTO.class)
     @GetMapping
     @RequestMapping("/{id}")
     public ResponseEntity<PedidoDTO> find(@PathVariable Integer id) {
@@ -35,6 +37,7 @@ public class PedidoResource {
         return ResponseEntity.ok().body(pedidoDTO);
     }
     
+    @ApiOperation(value="Insere pedido")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) {
 		obj = service.insert(obj);
@@ -43,6 +46,7 @@ public class PedidoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+    @ApiOperation(value="Busca paginada de pedido", response = PedidoDTO.class)
 	@GetMapping
 	public ResponseEntity<Page<PedidoDTO>> findPage(
 			@RequestParam(value="page", defaultValue="0") Integer page, 

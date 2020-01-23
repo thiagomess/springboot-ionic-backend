@@ -15,6 +15,7 @@ import br.com.thiagoGomes.security.JWTUtil;
 import br.com.thiagoGomes.security.UserSS;
 import br.com.thiagoGomes.service.AuthService;
 import br.com.thiagoGomes.service.UserService;
+import io.swagger.annotations.ApiOperation;
 
 
 /**
@@ -31,6 +32,7 @@ public class AuthResource {
 	@Autowired
 	private AuthService authService;
 
+	 @ApiOperation(value="Atualiza token")
 	@PostMapping("/refresh_token")
 	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
 		UserSS user = UserService.authenticated();
@@ -40,6 +42,7 @@ public class AuthResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	 @ApiOperation(value="Reseta senha")
 	@PostMapping("/forgot")
 	public ResponseEntity<Void> forgot(@Valid @RequestBody EmailDTO objDto) {
 		authService.sendNewPassword(objDto.getEmail());

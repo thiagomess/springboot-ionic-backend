@@ -24,6 +24,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.thiagoGomes.domain.Categoria;
 import br.com.thiagoGomes.dto.CategoriaDTO;
 import br.com.thiagoGomes.service.CategoriaService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/categorias")
@@ -32,12 +35,14 @@ public class CategoriaResource {
 	@Autowired
 	private CategoriaService service;
 
+	@ApiOperation(value="Busca por id", response = Categoria.class)
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		final Categoria categoria = service.find(id);
 		return ResponseEntity.ok().body(categoria);
 	}
 
+	@ApiOperation(value="Insere categoria")
 	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
@@ -47,6 +52,7 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value="Atualiza categoria")
 	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
@@ -55,7 +61,12 @@ public class CategoriaResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
+	
 
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Não é possível excluir uma categoria que possui produtos"),
+			@ApiResponse(code = 404, message = "Código inexistente") })
+	@ApiOperation(value="Deleta categoria")
 	@PreAuthorize("hasAnyRole('ADMIN')") //Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -63,6 +74,7 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value="Retorna todas as categorias", response = CategoriaDTO.class)
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll() {
 		List<Categoria> listaCategorias = service.findAll();
@@ -74,6 +86,7 @@ public class CategoriaResource {
 	
 	//http://localhost:8080/categorias/page?linesPerPage=2&page=3&direction=DESC&orderBy=id
 	//Caso nao escolhido os atributos no param, será setado os valores default
+	@ApiOperation(value="Retorna todas as categorias por paginação", response = CategoriaDTO.class)
 	@GetMapping(value = "/page")
 	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(name = "page", defaultValue = "0") Integer page, 

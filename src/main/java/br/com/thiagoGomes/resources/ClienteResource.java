@@ -26,6 +26,7 @@ import br.com.thiagoGomes.domain.Cliente;
 import br.com.thiagoGomes.dto.ClienteDTO;
 import br.com.thiagoGomes.dto.ClienteNewDTO;
 import br.com.thiagoGomes.service.ClienteService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/clientes")
@@ -34,6 +35,7 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService service;
 
+	@ApiOperation(value="Busca cliente por id", response = Cliente.class)
 	@GetMapping
 	@RequestMapping("/{id}")
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
@@ -42,6 +44,7 @@ public class ClienteResource {
 	}
 	
 	//http://localhost:8080/clientes/email?value=thiagogomes19@hotmail.com
+	@ApiOperation(value="Busca cliente por email", response = Cliente.class)
 	@GetMapping
 	@RequestMapping("/email")
 	public ResponseEntity<Cliente> findByEmail(@RequestParam(value="value") String email) {
@@ -49,6 +52,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(cliente);
 	}
 
+	@ApiOperation(value="Insere cliente")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
 		Cliente obj = service.fromDTO(objDto);
@@ -57,6 +61,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value="Altera cliente")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id) {
 		Cliente obj = service.fromDTO(objDto);
@@ -65,6 +70,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value="Deleta cliente")
 	@PreAuthorize("hasAnyRole('ADMIN')") // Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -72,6 +78,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value="Busca todos cliente", response = ClienteDTO.class)
 	@PreAuthorize("hasAnyRole('ADMIN')") // Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
@@ -81,6 +88,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listaDto);
 	}
 
+	@ApiOperation(value="Busca todos os clientes por busca paginada", response = ClienteDTO.class)
 	@PreAuthorize("hasAnyRole('ADMIN')") // Somente ADMIN pode acessar este endpoint(Config no SecurityConfig)
 	// http://localhost:8080/clientes/page?linesPerPage=2&page=3&direction=DESC&orderBy=id
 	// Caso nao escolhido os atributos no param, será setado os valores default
@@ -96,6 +104,7 @@ public class ClienteResource {
 	}
 
 	//endpoint que irá receber um arquivo
+	@ApiOperation(value="Upload de foto de perfil")
 	@PostMapping("/picture")
 	public ResponseEntity<Void> uploadProfile(@RequestParam("file") MultipartFile file) {
 		URI uri = service.uploadProfilePicture(file);
